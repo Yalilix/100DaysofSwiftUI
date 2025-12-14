@@ -23,15 +23,18 @@ struct ContentView: View {
           ListLayout(missions: missions, astronauts: astronauts)
         }
       }
-    }
-    .navigationTitle("Moonshot")
-    .background(.darkBackground)
-    .preferredColorScheme(.dark)
-    .toolbar {
-      Button {
-        showingGrid.toggle()
-      } label: {
-        Image(systemName: showingGrid ? "square.grid.2x2" : "line.3.horizontal")
+      .navigationTitle("Moonshot")
+      .background(.darkBackground)
+      .preferredColorScheme(.dark)
+      .toolbar {
+        Button {
+          showingGrid.toggle()
+        } label: {
+          Image(systemName: showingGrid ? "square.grid.2x2" : "line.3.horizontal")
+        }
+      }
+      .navigationDestination(for: Mission.self) { mission in
+        MissionView(mission: mission, astronauts: astronauts)
       }
     }
   }
@@ -46,13 +49,10 @@ struct GridLayout: View {
   ]
   
   var body: some View {
-    NavigationStack {
       ScrollView {
         LazyVGrid(columns: columns) {
           ForEach(missions) { mission in
-            NavigationLink {
-              MissionView(mission: mission, astronauts: astronauts)
-            } label: {
+            NavigationLink(value: mission) {
               VStack {
                 Image(mission.image)
                   .resizable()
@@ -82,7 +82,6 @@ struct GridLayout: View {
         }
         .padding([.horizontal, .bottom])
       }
-    }
   }
 }
 
@@ -91,19 +90,16 @@ struct ListLayout: View {
   let astronauts: [String: Astronaut]
   
   var body: some View {
-    NavigationStack {
       List {
         ForEach(missions) { mission in
-          NavigationLink {
-            MissionView(mission: mission, astronauts: astronauts)
-          } label: {
+          NavigationLink(value: mission) {
             HStack(spacing: 30) {
               Image(mission.image)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100, height: 100)
               
-              VStack {
+              VStack(alignment: .leading) {
                 Text(mission.displayName)
                   .font(.headline)
                   .foregroundStyle(.white)
@@ -115,12 +111,10 @@ struct ListLayout: View {
             
           }
         }
+        .listRowBackground(Color.darkBackground)
       }
       .scrollContentBackground(.hidden)
-      .listRowBackground(Color.darkBackground)
       .listStyle(.plain)
-      .padding([.horizontal, .bottom])
-    }
   }
 }
 

@@ -1,5 +1,5 @@
-//
 //  ContentView.swift
+//
 //  iExpense
 //
 //  Created by Yanlin Li  on 25/11/2025.
@@ -75,14 +75,22 @@ struct ContentView: View {
       }
       .navigationTitle("iExpense")
       .toolbar {
-        Button("Add Expense", systemImage: "plus") {
-          showingAddExpense = true
+//        Button("Add Expense", systemImage: "plus") {
+//          showingAddExpense = true
+//        }
+        
+        NavigationLink {
+            AddView(expenses: expenses)
+        } label: {
+            Label("Add Expense", systemImage: "plus")
         }
       }
       .sheet(isPresented: $showingAddExpense) {
           AddView(expenses: expenses)
       }
-      
+      .navigationDestination(for: ExpenseItem.self) { selection in
+          Text("You selected \(selection)")
+      }
       
     }
   }
